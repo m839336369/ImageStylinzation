@@ -3,14 +3,9 @@ import os
 import sys
 import ntpath
 import time
+import wandb
 from . import util, html
 from subprocess import Popen, PIPE
-
-
-try:
-    import wandb
-except ImportError:
-    print('Warning: wandb package cannot be found. The option "--use_wandb" will evaluation in error.')
 
 if sys.version_info[0] == 2:
     VisdomExceptionBase = Exception
@@ -87,8 +82,9 @@ class Visualizer():
                 self.create_visdom_connections()
 
         if self.use_wandb:
-            self.wandb_run = wandb.init(project=self.wandb_project_name, name=opt.name, config=opt) if not wandb.run else wandb.run
-            self.wandb_run._label(repo='CycleGAN-and-pix2pix')
+            self.wandb_run = wandb.init(project=self.wandb_project_name, name=opt.name,
+                                        config=opt) if not wandb.run else wandb.run
+            self.wandb_run._label(repo='CycleGAN')
 
         if self.use_html:  # create an HTML object at <checkpoints_dir>/web/; images will be saved under <checkpoints_dir>/web/images/
             self.web_dir = os.path.join(opt.checkpoints_dir, opt.name, 'web')
@@ -122,7 +118,7 @@ class Visualizer():
         """
         if self.display_id > 0:  # show images in the browser using visdom
             ncols = self.ncols
-            if ncols > 0:        # show all the images in one visdom panel
+            if ncols > 0:  # show all the images in one visdom panel
                 ncols = min(ncols, len(visuals))
                 h, w = next(iter(visuals.values())).shape[:2]
                 table_css = """<style>
@@ -159,7 +155,7 @@ class Visualizer():
                 except VisdomExceptionBase:
                     self.create_visdom_connections()
 
-            else:     # show each image in a separate visdom panel;
+            else:  # show each image in a separate visdom panel;
                 idx = 1
                 try:
                     for label, image in visuals.items():
