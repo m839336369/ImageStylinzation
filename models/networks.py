@@ -16,7 +16,7 @@ class Identity(nn.Module):
 
 
 def get_norm_layer(norm_type='instance'):
-    # 判断正则化方式
+    # 判断归一化方式
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True, track_running_stats=True)
     elif norm_type == 'instance':

@@ -16,7 +16,7 @@ if __name__ == '__main__':
     visualizer = Visualizer(opt)   # 训练可视化
     total_iters = 0                # 总迭代次数
 
-    for epoch in range(opt.epoch_count, opt.n_epochs + 1):
+    for epoch in range(opt.epoch_count, opt.n_epochs + opt.n_epochs_decay + 1):
         epoch_start_time = time.time()
         iter_data_time = time.time()
         epoch_iter = 0                  # 当前迭代次数
